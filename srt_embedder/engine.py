@@ -862,7 +862,7 @@ def detect_installed_fonts() -> list[str]:
 
 def _build_hardsub_filter(sub_path: str, style: Optional[HardsubStyle]) -> str:
     escaped = _escape_ffmpeg_sub_path(sub_path)
-    base = f"subtitles='{escaped}':charenc=UTF-8"
+    base = f"subtitles=filename='{escaped}':charenc=UTF-8"
     if os.name == "nt":
         win_fonts = Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts"
         if win_fonts.is_dir():
@@ -1077,7 +1077,11 @@ def _build_ffmpeg_soft_cmd(
     safe_stream_map: bool = False,
     font_attachments: Optional[list[str]] = None,
 ) -> list[str]:
-    cmd = [ffmpeg_exe, "-y", "-hide_banner", "-stats", "-i", video_path]
+    src_ext = Path(video_path).suffix.lower()
+    cmd = [ffmpeg_exe, "-y", "-hide_banner", "-stats"]
+    if safe_stream_map or src_ext in (".avi", ".mpg", ".mpeg", ".vob", ".wmv", ".flv", ".ts"):
+        cmd.extend(["-fflags", "+genpts"])
+    cmd.extend(["-i", video_path])
     for srt_file, _, _, _, _ in prepared_subs:
         cmd.extend(["-i", srt_file])
 

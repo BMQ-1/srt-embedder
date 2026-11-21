@@ -69,6 +69,14 @@ def find_binary(name: str) -> Optional[str]:
         if cand.is_file():
             return str(cand)
 
+    if sys.platform == "darwin" and name in ("ffmpeg", "ffprobe"):
+        for brew_full in (
+            Path("/opt/homebrew/opt/ffmpeg-full/bin") / name,
+            Path("/usr/local/opt/ffmpeg-full/bin") / name,
+        ):
+            if brew_full.is_file():
+                return str(brew_full)
+
     found = shutil.which(name)
     if found:
         return found

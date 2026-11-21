@@ -31,7 +31,10 @@ jobs:
 
       - name: Install FFmpeg & MKVToolNix (macOS)
         if: runner.os == 'macOS'
-        run: brew install ffmpeg mkvtoolnix
+        run: |
+          brew install ffmpeg-full mkvtoolnix
+          echo "/opt/homebrew/opt/ffmpeg-full/bin" >> $GITHUB_PATH
+          echo "/usr/local/opt/ffmpeg-full/bin" >> $GITHUB_PATH
 
       - name: Install FFmpeg & MKVToolNix (Windows)
         if: runner.os == 'Windows'

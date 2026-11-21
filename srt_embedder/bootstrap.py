@@ -211,7 +211,7 @@ def bootstrap_tool(tool_name: str, progress_cb: Optional[ProgressFn] = None) -> 
     if tool_name in ("ffmpeg", "ffprobe"):
         if find_binary("ffmpeg") and find_binary("ffprobe"):
             return True, "FFmpeg and FFprobe are already installed."
-        if os.name == "nt":
+        if sys.platform == "win32":
             ok, msg = install_ffmpeg_portable(progress_cb)
             if ok:
                 return True, msg
@@ -223,7 +223,7 @@ def bootstrap_tool(tool_name: str, progress_cb: Optional[ProgressFn] = None) -> 
     if tool_name in ("mkvmerge", "mkvextract"):
         if find_binary("mkvmerge") and find_binary("mkvextract"):
             return True, "MKVToolNix is already installed."
-        if os.name == "nt":
+        if sys.platform == "win32":
             return install_via_winget("MoritzBunkus.MKVToolNix", progress_cb)
         if sys.platform == "darwin":
             return _install_via_homebrew("mkvtoolnix", progress_cb)
