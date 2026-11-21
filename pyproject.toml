@@ -56,3 +56,6 @@ include = ["srt_embedder*"]
 
 [tool.setuptools.package-data]
 srt_embedder = ["ui/*", "ui/assets/*", "assets/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

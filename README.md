@@ -65,19 +65,48 @@
   <img src="docs/media/features-bento.svg" alt="Core Capabilities Bento" width="100%" />
 </p>
 
-| Capability | What It Does |
-| :--- | :--- |
-| **Smart Fallback Chain** | `mkvmerge` (primary lossless Matroska) → `ffmpeg` (`srt` / `mov_text`) → safe stream map (drops broken data/timecode tracks) → HTML tag stripping → automatic lossless `.mkv` remux fallback for `.mp4`/`.avi`/`.ts`. |
-| **Encoding & Global Format Repair** | Auto-detects `UTF-8`, `UTF-16`, Arabic (`cp1256`), CJK (`cp932`/`Shift-JIS`, `EUC-JP`, `cp949`/`EUC-KR`, `GB18030`, `Big5`), Cyrillic (`cp1251`), Greek (`cp1253`), Hebrew (`cp1255`), Turkish (`cp1254`), and Vietnamese (`cp1258`); ingests `.srt`, `.vtt`, `.ass`/`.ssa`, `.ttml`/`.dfxp`, MicroDVD `.sub`, and `.zip` archives; supports `--fix-rtl` BiDi punctuation polish and automatic `.ttf`/`.otf`/`.ttc` font attachments in MKV. |
-| **Sync Check, FPS Drift & Audio VAD** | Aligns against embedded text tracks—or falls back to FFmpeg speech-activity VAD (`silencedetect`)—and fits linear `23.976 ↔ 24 ↔ 25 fps` speed ratios + offsets (`--auto-sync`, `--speed`, 1-click UI fix). |
-| **Companion Auto-Discovery & Episode Pairing** | Dropping or invoking a video automatically discovers matching subtitles in `Subs/` / `Subtitles/` / `.zip` archives; batch mode matches `S01E01` / `1x01` episode keys across differing release names. |
-| **Automation Profiles, Naming & Smart Rules** | Built-in (`cinema-default`, `arabic-rtl`, `tv-compat`, `archive-inplace`) and custom profiles shared across GUI, CLI, Watch Daemon, and quick-embed; supports `default` (`[subtitled]`), `plex`, `clean`, or custom output naming (`--naming`) and foreign-audio default rules (`--prefer-sub`). |
-| **Bilingual Dual-Subtitle Merger** | Merges two subtitle tracks (e.g., Arabic bottom + English top) into a single styled `.ass` track for language learning or family viewing. |
-| **GPU Hardsub + Live Preview** | Probes `h264_nvenc`, `hevc_nvenc`, `h264_qsv`, `h264_amf`, and `libx264` with BT.709 color preservation and live 16:9 font/size/color/outline/margin preview. |
-| **SDH/Ad Cleaner & Library Audit** | Strips `[MUSIC]`, `(SIGHS)`, `♪ notes`, `SPEAKER:`, and promo cues; audits entire media folders (`ready` / `pairable` / `missing`) with 1-click batch embedding. |
-| **Watch Daemon + System Tray** | Persists processed history across restarts, auto-archives or recycles consumed subs, runs silently in `--tray` mode with desktop toasts, and supports OS sign-in startup (Windows `HKCU`, macOS LaunchAgent, Linux Autostart). |
-| **Atomic Staging, Undo & Auto-Pruning** | Stages to `.tmp`, verifies output stream count via `ffprobe`, checks free disk space upfront, keeps an instant same-filesystem backup when replacing originals, and auto-prunes backups (`20` max / `14` days / `10 GB` cap). |
-| **Verified Engine Bootstrapper & Updater** | Missing `ffmpeg`/`ffprobe` or `mkvmerge`? Install from **Settings ⚙** or `srt-embedder doctor --install` (SHA-256 verified Windows portable download + `winget`, macOS Homebrew, or Linux package manager guidance), and check releases via `doctor --check-update`. |
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Smart Fallback Chain</strong><br/>
+      <code>mkvmerge</code> → <code>ffmpeg</code> → safe stream map (drops broken data/timecode tracks) → tag strip → lossless <code>.mkv</code> remux fallback.
+    </td>
+    <td width="50%" valign="top">
+      <strong>Global Formats, CJK &amp; RTL</strong><br/>
+      Ingests <code>.srt</code>, <code>.vtt</code>, <code>.ass</code>/<code>.ssa</code>, <code>.ttml</code>/<code>.dfxp</code>, <code>.sub</code> &amp; <code>.zip</code>; auto-decodes UTF-8/16, Arabic, CJK, Hebrew, Greek &amp; Cyrillic + <code>--fix-rtl</code> &amp; MKV font attach.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Sync Check, FPS Drift &amp; VAD</strong><br/>
+      Aligns against embedded text or FFmpeg speech VAD (<code>silencedetect</code>), fitting linear <code>23.976 ↔ 24 ↔ 25 fps</code> speed ratios &amp; offsets (<code>--auto-sync</code>, <code>--speed</code>).
+    </td>
+    <td width="50%" valign="top">
+      <strong>Companion Pairing &amp; Dual Merge</strong><br/>
+      Auto-discovers <code>Subs/</code> &amp; <code>.zip</code> companions, pairs <code>S01E01</code> episodes across release names, and merges two tracks into bilingual <code>.ass</code>.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Profiles, Naming &amp; Smart Rules</strong><br/>
+      Shared GUI/CLI/Watch presets with <code>default</code> / <code>plex</code> / <code>clean</code> output templates (<code>--naming</code>) and foreign-audio default rules (<code>--prefer-sub</code>).
+    </td>
+    <td width="50%" valign="top">
+      <strong>GPU Hardsub &amp; SDH Cleaners</strong><br/>
+      NVENC, QSV, AMF &amp; <code>libx264</code> burn-in with live 16:9 BT.709 preview; strips <code>[SDH]</code> cues/promo ads and audits folders via <code>audit</code>.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Watch Daemon &amp; System Tray</strong><br/>
+      Persistent folder watcher, silent <code>--tray</code> mode with desktop toasts, consumed-sub archive/trash cleanup, and OS sign-in startup.
+    </td>
+    <td width="50%" valign="top">
+      <strong>Atomic Undo &amp; Engine Setup</strong><br/>
+      <code>.tmp</code> staging, <code>ffprobe</code> + disk checks, instant backup restore (auto-pruned <code>20</code> max / <code>14d</code> / <code>10 GB</code>), SHA-256 FFmpeg install &amp; release check.
+    </td>
+  </tr>
+</table>
 
 <p align="center">
   <img src="docs/media/divider.svg" alt="" width="100%" />
