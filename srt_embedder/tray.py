@@ -168,7 +168,7 @@ def notify_desktop(title: str, message: str) -> None:
                 env=env,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                creationflags=subprocess.CREATE_NO_WINDOW,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
             )
         elif sys.platform == "darwin":
             env = os.environ.copy()

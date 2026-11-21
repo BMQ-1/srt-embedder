@@ -150,7 +150,7 @@ def test_shell_ext_mocked_winreg(monkeypatch: pytest.MonkeyPatch) -> None:
         DeleteKey=lambda _root, sub: store.pop(sub) if sub in store else (_ for _ in ()).throw(FileNotFoundError(sub)),
     )
     monkeypatch.setitem(__import__("sys").modules, "winreg", fake_winreg)
-    monkeypatch.setattr(shell_ext.os, "name", "nt")
+    monkeypatch.setattr(shell_ext.sys, "platform", "win32")
 
     assert shell_ext.is_shell_installed() is False
     ok, _msg = shell_ext.install_shell_menu()
@@ -165,6 +165,8 @@ def test_shell_ext_mocked_winreg(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_tray_startup_and_safe_notify(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(tray.sys, "platform", "win32")
+
     cmd = tray._startup_command(str(tmp_path), recursive=True, profile="arabic-rtl")
     assert "watch" in cmd and "--tray" in cmd and "-r" in cmd and '--profile "arabic-rtl"' in cmd
 
@@ -176,7 +178,6 @@ def test_tray_startup_and_safe_notify(tmp_path: Path, monkeypatch: pytest.Monkey
         return MagicMock()
 
     monkeypatch.setattr(tray.subprocess, "Popen", _fake_popen)
-    monkeypatch.setattr(tray.os, "name", "nt")
 
     evil_name = "Movie $(Calc) `whoami` 'test'.mkv"
     tray.notify_desktop("SRT Embedder", evil_name)
@@ -218,7 +219,7 @@ def test_tray_startup_and_safe_notify(tmp_path: Path, monkeypatch: pytest.Monkey
 
 def test_bootstrap_sha256_verification_and_rejection(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(bootstrap, "managed_bin_dir", lambda: tmp_path)
-    monkeypatch.setattr(bootstrap.os, "name", "nt")
+    monkeypatch.setattr(bootstrap.sys, "platform", "win32")
 
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as zf:

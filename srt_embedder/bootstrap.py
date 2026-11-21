@@ -51,7 +51,7 @@ def _compute_file_sha256(path: Path) -> str:
 
 def install_ffmpeg_portable(progress_cb: Optional[ProgressFn] = None) -> tuple[bool, str]:
     """Download, SHA-256 verify, and extract portable ffmpeg.exe & ffprobe.exe into %LOCALAPPDATA%/SRTEmbedder/bin."""
-    if os.name != "nt":
+    if sys.platform != "win32":
         return False, "Automatic portable download is only implemented for Windows. Install ffmpeg via your package manager."
 
     bin_dir = managed_bin_dir()
@@ -110,7 +110,7 @@ def install_ffmpeg_portable(progress_cb: Optional[ProgressFn] = None) -> tuple[b
 
 def install_via_winget(package_id: str, progress_cb: Optional[ProgressFn] = None) -> tuple[bool, str]:
     """Attempt silent winget install (e.g. MoritzBunkus.MKVToolNix or Gyan.FFmpeg)."""
-    if os.name != "nt":
+    if sys.platform != "win32":
         return False, "winget is only available on Windows."
     winget = shutil.which("winget")
     if not winget:
@@ -120,7 +120,7 @@ def install_via_winget(package_id: str, progress_cb: Optional[ProgressFn] = None
         progress_cb(15.0, f"Running winget install {package_id}...")
 
     try:
-        flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+        flags = getattr(subprocess, "CREATE_NO_WINDOW", 0) if sys.platform == "win32" else 0
         proc = subprocess.run(
             [
                 winget, "install", "--id", package_id,
