@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 36" width="1200" height="36" fill="none">
+  <defs>
+    <linearGradient id="tlRail" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#64748B" stop-opacity="0"/>
+      <stop offset="12%" stop-color="#64748B" stop-opacity="0.28"/>
+      <stop offset="88%" stop-color="#64748B" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#64748B" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="trackClip">
+      <rect x="80" y="2" width="1040" height="32" rx="8"/>
+    </clipPath>
+  </defs>
+
+  <!-- Dual timeline tracks -->
+  <line x1="60" y1="13" x2="1140" y2="13" stroke="url(#tlRail)" stroke-width="1.1"/>
+  <line x1="60" y1="23" x2="1140" y2="23" stroke="url(#tlRail)" stroke-width="1.1"/>
+
+  <g clip-path="url(#trackClip)">
+    <!-- Track 1 drifting subtitle cue segments -->
+    <rect y="10.5" width="76" height="5" rx="2.5" fill="#F59E0B" fill-opacity="0.78">
+      <animate attributeName="x" values="60;1140" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.9;1" dur="9s" repeatCount="indefinite"/>
+    </rect>
+    <rect y="10.5" width="52" height="5" rx="2.5" fill="#FBBF24" fill-opacity="0.65">
+      <animate attributeName="x" values="60;1140" begin="-4.5s" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.1;0.9;1" begin="-4.5s" dur="9s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Track 2 synced audio/reference blocks -->
+    <rect y="20.5" width="64" height="5" rx="2.5" fill="#22C55E" fill-opacity="0.72">
+      <animate attributeName="x" values="1120;40" dur="10.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.1;0.9;1" dur="10.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect y="20.5" width="44" height="5" rx="2.5" fill="#38BDF8" fill-opacity="0.65">
+      <animate attributeName="x" values="1120;40" begin="-5.25s" dur="10.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.1;0.9;1" begin="-5.25s" dur="10.5s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Alive scanning playhead needle -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="140 0; 1060 0; 140 0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1" dur="8s" repeatCount="indefinite"/>
+      <rect x="-1.25" y="6" width="2.5" height="24" rx="1.25" fill="#F59E0B"/>
+      <polygon points="-4.5,4 4.5,4 0,9" fill="#FBBF24"/>
+      <circle cx="0" cy="18" r="7" fill="#F59E0B" fill-opacity="0.22">
+        <animate attributeName="r" values="5;10;5" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+</svg>

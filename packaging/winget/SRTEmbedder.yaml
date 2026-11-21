@@ -1,0 +1,15 @@
+PackageIdentifier: SRTEmbedder.SRTEmbedder
+PackageVersion: 1.2.0
+PackageName: SRT Embedder
+Publisher: SRT Embedder Contributors
+License: MIT
+ShortDescription: Studio-grade CLI & Desktop GUI for embedding subtitles into videos with fallbacks, sync, and instant undo.
+PackageUrl: https://github.com/BMQ-1/srt-embedder
+Installers:
+  - Architecture: x64
+    InstallerType: inno
+    InstallerUrl: https://github.com/BMQ-1/srt-embedder/releases/download/v1.2.0/SRT-Embedder-Setup-1.2.0.exe
+    InstallerSha256: REPLACE_WITH_INSTALLER_SHA256
+    Scope: user
+ManifestType: singleton
+ManifestVersion: 1.6.0

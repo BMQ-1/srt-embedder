@@ -1,0 +1,19 @@
+{
+  "version": "1.2.0",
+  "description": "Studio-grade CLI & Desktop GUI for embedding SRT/VTT/ASS/TTML/SUB subtitles into videos.",
+  "homepage": "https://github.com/BMQ-1/srt-embedder",
+  "license": "MIT",
+  "url": "https://github.com/BMQ-1/srt-embedder/releases/download/v1.2.0/SRT-Embedder-win64-portable.zip",
+  "hash": "REPLACE_WITH_PORTABLE_ZIP_SHA256",
+  "bin": [
+    "srt-embedder-cli.exe",
+    ["SRT-Embedder.exe", "srt-embedder-gui"]
+  ],
+  "shortcuts": [
+    ["SRT-Embedder.exe", "SRT Embedder"]
+  ],
+  "suggest": {
+    "FFmpeg": "main/ffmpeg",
+    "MKVToolNix": "extras/mkvtoolnix"
+  }
+}

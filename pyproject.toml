@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "srt-embedder"
+version = "1.2.0"
+description = "Global CLI & Desktop Studio for embedding SRT/VTT/ASS/TTML/SUB subtitles into videos with encoding repair, FPS/VAD sync, font attachments, and instant undo."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+keywords = ["subtitles", "srt", "ttml", "mkvmerge", "ffmpeg", "muxer", "gui", "cli", "video"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Video",
+]
+dependencies = [
+  "rich>=13.0.0",
+  "charset-normalizer>=3.0.0",
+  "watchdog>=4.0.0",
+]
+
+[project.optional-dependencies]
+gui = [
+  "pywebview>=5.0.0",
+  "pystray>=0.19.5",
+  "pillow>=10.0.0",
+]
+trash = ["Send2Trash>=1.8.0"]
+all = ["srt-embedder[gui,trash]"]
+dev = ["pytest>=8.0.0", "pyinstaller>=6.0.0"]
+
+[project.scripts]
+srt-embedder = "srt_embedder.cli:main"
+
+[project.gui-scripts]
+srt-embedder-gui = "srt_embedder.gui:launch_gui"
+
+[project.urls]
+Homepage = "https://github.com/BMQ-1/srt-embedder"
+Repository = "https://github.com/BMQ-1/srt-embedder"
+Issues = "https://github.com/BMQ-1/srt-embedder/issues"
+Changelog = "https://github.com/BMQ-1/srt-embedder/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+include = ["srt_embedder*"]
+
+[tool.setuptools.package-data]
+srt_embedder = ["ui/*", "ui/assets/*", "assets/*"]

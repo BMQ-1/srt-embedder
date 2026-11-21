@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 76" width="180" height="76" fill="none">
+  <defs>
+    <linearGradient id="card1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E2430"/>
+      <stop offset="100%" stop-color="#12161F"/>
+    </linearGradient>
+    <linearGradient id="amberGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <!-- Back Card -->
+  <rect x="30" y="16" width="104" height="48" rx="9" transform="rotate(-4 82 40)" fill="#10131A" stroke="rgba(255,255,255,0.09)"/>
+  <!-- Main Subtitle Card -->
+  <rect x="40" y="14" width="112" height="52" rx="10" fill="url(#card1)" stroke="rgba(245,158,11,0.34)" stroke-width="1.2"/>
+  <circle cx="56" cy="30" r="6" fill="rgba(245,158,11,0.16)" stroke="#F59E0B" stroke-width="1.4"/>
+  <path d="M56 27.5v5M53.5 30h5" stroke="#F59E0B" stroke-width="1.4" stroke-linecap="round"/>
+  <rect x="70" y="25" width="44" height="4" rx="2" fill="#E2E8F0" fill-opacity="0.7"/>
+  <rect x="70" y="33" width="66" height="4" rx="2" fill="#94A3B8" fill-opacity="0.45"/>
+  <rect x="50" y="47" width="48" height="5" rx="2.5" fill="url(#amberGlow)"/>
+  <rect x="104" y="47" width="32" height="5" rx="2.5" fill="#475569" fill-opacity="0.65"/>
+</svg>

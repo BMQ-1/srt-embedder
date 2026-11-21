@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" width="1200" height="280" fill="none">
+  <defs>
+    <linearGradient id="cardBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141821"/>
+      <stop offset="100%" stop-color="#0E1117"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card 1 -->
+  <rect x="0" y="0" width="384" height="130" rx="14" fill="url(#cardBg)" stroke="rgba(255,255,255,0.1)"/>
+  <rect x="20" y="20" width="34" height="34" rx="9" fill="rgba(245,158,11,0.14)" stroke="rgba(245,158,11,0.35)"/>
+  <path d="M30 37h14M37 30l7 7-7 7" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="66" y="42" fill="#F1F4F9" font-family="Segoe UI, system-ui, sans-serif" font-size="16" font-weight="650">Fallback Mux Engine</text>
+  <text x="20" y="76" fill="#98A2B3" font-family="Segoe UI, system-ui, sans-serif" font-size="13">mkvmerge → ffmpeg → safe stream map</text>
+  <text x="20" y="98" fill="#667085" font-family="Segoe UI, system-ui, sans-serif" font-size="12">Auto lossless .mkv fallback for MP4 &amp; AVI</text>
+
+  <!-- Card 2 -->
+  <rect x="408" y="0" width="384" height="130" rx="14" fill="url(#cardBg)" stroke="rgba(255,255,255,0.1)"/>
+  <rect x="428" y="20" width="34" height="34" rx="9" fill="rgba(34,197,94,0.14)" stroke="rgba(34,197,94,0.35)"/>
+  <path d="M438 37l5 5 10-10" stroke="#22C55E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="474" y="42" fill="#F1F4F9" font-family="Segoe UI, system-ui, sans-serif" font-size="16" font-weight="650">Sync Check &amp; Repair</text>
+  <text x="428" y="76" fill="#98A2B3" font-family="Segoe UI, system-ui, sans-serif" font-size="13">UTF-8/CJK/RTL · VTT · ASS · TTML · SUB</text>
+  <text x="428" y="98" fill="#667085" font-family="Segoe UI, system-ui, sans-serif" font-size="12">Audio-VAD &amp; FPS drift fix + SDH/ad cleaner</text>
+
+  <!-- Card 3 -->
+  <rect x="816" y="0" width="384" height="130" rx="14" fill="url(#cardBg)" stroke="rgba(255,255,255,0.1)"/>
+  <rect x="836" y="20" width="34" height="34" rx="9" fill="rgba(56,189,248,0.14)" stroke="rgba(56,189,248,0.35)"/>
+  <rect x="845" y="29" width="16" height="16" rx="4" stroke="#38BDF8" stroke-width="2"/>
+  <text x="882" y="42" fill="#F1F4F9" font-family="Segoe UI, system-ui, sans-serif" font-size="16" font-weight="650">GPU Hardsub Studio</text>
+  <text x="836" y="76" fill="#98A2B3" font-family="Segoe UI, system-ui, sans-serif" font-size="13">NVENC · QSV · AMF · BT.709 calibrated</text>
+  <text x="836" y="98" fill="#667085" font-family="Segoe UI, system-ui, sans-serif" font-size="12">Live 16:9 font, color &amp; outline preview</text>
+
+  <!-- Card 4 -->
+  <rect x="0" y="150" width="384" height="130" rx="14" fill="url(#cardBg)" stroke="rgba(255,255,255,0.1)"/>
+  <rect x="20" y="170" width="34" height="34" rx="9" fill="rgba(245,158,11,0.14)" stroke="rgba(245,158,11,0.35)"/>
+  <path d="M30 183h14M30 191h9" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <text x="66" y="192" fill="#F1F4F9" font-family="Segoe UI, system-ui, sans-serif" font-size="16" font-weight="650">Bilingual Dual Merger</text>
+  <text x="20" y="226" fill="#98A2B3" font-family="Segoe UI, system-ui, sans-serif" font-size="13">Arabic bottom + English top styled .ass</text>
+  <text x="20" y="248" fill="#667085" font-family="Segoe UI, system-ui, sans-serif" font-size="12">Plus 1-click stream extract &amp; drag reorder</text>
+
+  <!-- Card 5 -->
+  <rect x="408" y="150" width="384" height="130" rx="14" fill="url(#cardBg)" stroke="rgba(255,255,255,0.1)"/>
+  <rect x="428" y="170" width="34" height="34" rx="9" fill="rgba(34,197,94,0.14)" stroke="rgba(34,197,94,0.35)"/>
+  <circle cx="445" cy="187" r="6" stroke="#22C55E" stroke-width="2"/>
+  <text x="474" y="192" fill="#F1F4F9" font-family="Segoe UI, system-ui, sans-serif" font-size="16" font-weight="650">Watch Folder Daemon</text>
+  <text x="428" y="226" fill="#98A2B3" font-family="Segoe UI, system-ui, sans-serif" font-size="13">Auto-pairs incoming downloads &amp; seasons</text>
+  <text x="428" y="248" fill="#667085" font-family="Segoe UI, system-ui, sans-serif" font-size="12">Waits for write stability before muxing</text>
+
+  <!-- Card 6 -->
+  <rect x="816" y="150" width="384" height="130" rx="14" fill="url(#cardBg)" stroke="rgba(255,255,255,0.1)"/>
+  <rect x="836" y="170" width="34" height="34" rx="9" fill="rgba(56,189,248,0.14)" stroke="rgba(56,189,248,0.35)"/>
+  <path d="M848 184l-4 4 4 4M844 188h12a4 4 0 0 1 0 8h-3" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="882" y="192" fill="#F1F4F9" font-family="Segoe UI, system-ui, sans-serif" font-size="16" font-weight="650">Atomic Safety &amp; Undo</text>
+  <text x="836" y="226" fill="#98A2B3" font-family="Segoe UI, system-ui, sans-serif" font-size="13">ffprobe verification + disk space guard</text>
+  <text x="836" y="248" fill="#667085" font-family="Segoe UI, system-ui, sans-serif" font-size="12">Instant same-filesystem backup &amp; restore</text>
+</svg>

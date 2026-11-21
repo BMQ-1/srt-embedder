@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" width="640" height="280" fill="none" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#101827"/>
+      <stop offset="55%" stop-color="#1B2538"/>
+      <stop offset="100%" stop-color="#0B0E15"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="68%" cy="34%" r="48%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.34"/>
+      <stop offset="45%" stop-color="#D97706" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0B0E15" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rim" cx="22%" cy="62%" r="42%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0B0E15" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="280" fill="url(#sky)"/>
+  <rect width="640" height="280" fill="url(#sun)"/>
+  <rect width="640" height="280" fill="url(#rim)"/>
+  <!-- Atmospheric Mountains / Horizon -->
+  <path d="M0 210 L110 154 L220 192 L365 132 L505 186 L640 144 L640 280 L0 280 Z" fill="#0D121C" fill-opacity="0.82"/>
+  <path d="M0 232 L155 188 L285 218 L430 176 L560 212 L640 192 L640 280 L0 280 Z" fill="#080A0F" fill-opacity="0.92"/>
+  <!-- Subtle Anamorphic Lens Flare Streak -->
+  <ellipse cx="435" cy="95" rx="180" ry="3" fill="#FBBF24" fill-opacity="0.18"/>
+  <!-- Cinema Title-Safe Guides -->
+  <rect x="32" y="22" width="576" height="236" rx="4" stroke="rgba(255,255,255,0.08)" stroke-dasharray="5 5"/>
+</svg>

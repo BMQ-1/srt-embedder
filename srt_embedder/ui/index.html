@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRT Embedder</title>
+  <link rel="stylesheet" href="feelcraft.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Studio Header -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/brand-logo.svg" alt="" width="34" height="34" style="border-radius:9px;display:block;" />
+        <div>
+          <div class="brand-title">SRT Embedder</div>
+          <div class="brand-sub">Lossless Muxing · Smart Fallbacks</div>
+        </div>
+      </div>
+
+      <div id="mode-tabs" class="topbar-center" role="tablist" aria-label="Workspace mode" data-active="single">
+        <span class="seg-indicator" aria-hidden="true"></span>
+        <button id="tab-single" class="seg-btn" role="tab" aria-selected="true" data-i18n="tabSingle">Mux Studio</button>
+        <button id="tab-batch" class="seg-btn" role="tab" aria-selected="false" data-i18n="tabBatch">Batch Folder</button>
+        <button id="tab-watch" class="seg-btn" role="tab" aria-selected="false">
+          <span id="watch-dot" class="watch-pulse" aria-hidden="true"></span><span data-i18n="tabWatch">Watch Daemon</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div id="tool-pills" class="tool-pills" data-tip="Inspect muxing engines &amp; installers">
+          <span class="status-pill"><span class="dot"></span>Checking...</span>
+        </div>
+        <button id="btn-undo-drawer" class="btn hidden" data-tip="Restore or manage replaced backups">
+          Undo <span id="undo-count" class="badge tabular">0</span>
+        </button>
+        <button id="btn-theme" class="icon-btn" data-tip="Toggle Dark / Light theme" aria-label="Toggle Theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+        </button>
+        <button id="btn-settings" class="icon-btn" data-tip="Studio Settings &amp; Engine Doctor (Ctrl+,)" aria-label="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+          </svg>
+        </button>
+        <button id="btn-cmd-palette" class="btn" data-tip="Command Palette (Ctrl+K)">
+          Commands <kbd>Ctrl+K</kbd>
+        </button>
+      </div>
+    </header>
+
+    <div class="workspace-stage">
+      <!-- Tab 1: Mux Studio -->
+      <main id="view-single" class="workspace">
+        <section class="col-scroll">
+          <!-- Video Input Panel -->
+          <div class="panel">
+            <div class="section-head">
+              <span class="section-title">1 · Target Video</span>
+              <button id="btn-browse-video" class="btn btn-ghost" style="min-height:28px;padding:0 8px;font-size:12px;">
+                Browse <kbd>Ctrl+O</kbd>
+              </button>
+            </div>
+            <div id="video-dropzone" class="dropzone" tabindex="0">
+              <div class="dz-meta">
+                <div class="dz-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <g class="dz-layer-back">
+                      <rect x="2" y="6" width="14" height="12" rx="2.5" />
+                    </g>
+                    <g class="dz-layer-front">
+                      <path d="M16 10l5-2.5v9L16 14" />
+                    </g>
+                  </svg>
+                </div>
+                <div style="min-width:0;">
+                  <div id="video-title" class="dz-title">Drop a video file anywhere or click to browse</div>
+                  <div id="video-sub" class="dz-sub">Supports MKV, MP4, M4V, MOV, AVI, WEBM, TS · Click embedded sub chips to extract</div>
+                </div>
+              </div>
+              <button id="btn-clear-video" class="icon-btn hidden" data-tip="Clear video" aria-label="Clear video">✕</button>
+            </div>
+            <div id="video-streams" class="stream-strip hidden"></div>
+            <div id="recent-strip" class="recent-strip hidden"></div>
+            <div id="video-advisory" class="advisory-bar hidden"></div>
+          </div>
+
+          <!-- Subtitle Tracks Panel -->
+          <div class="panel" style="flex:1;display:flex;flex-direction:column;">
+            <div class="section-head">
+              <span class="section-title">2 · Subtitle Tracks (<span id="sub-count" class="tabular">0</span>)</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <button id="btn-merge-bilingual" class="btn hidden" style="min-height:28px;padding:0 9px;font-size:11.5px;" data-tip="Merge top 2 tracks into a dual-language styled .ass">
+                  Merge Bilingual (.ass)
+                </button>
+                <button id="btn-browse-subs" class="btn btn-ghost" style="min-height:28px;padding:0 8px;font-size:12px;">
+                  + Add Subtitle
+                </button>
+              </div>
+            </div>
+
+            <div id="sub-dropzone" class="dropzone compact" tabindex="0" style="margin-bottom:8px;">
+              <div class="dz-meta">
+                <div class="dz-icon" style="width:32px;height:32px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+                    <g class="dz-layer-back"><rect x="3" y="5" width="18" height="14" rx="2.5" opacity="0.7" /></g>
+                    <g class="dz-layer-front"><path d="M12 9v6M9 12h6" /></g>
+                  </svg>
+                </div>
+                <div>
+                  <div class="dz-title" style="font-size:12.5px;">Drop .srt, .vtt, .ass, .ttml, .sub, or .zip subtitle files</div>
+                  <div class="dz-sub">Drag cards to reorder · Auto-repairs CJK/RTL encoding, SDH cues &amp; FPS drift</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="track-list" class="track-list"></div>
+          </div>
+        </section>
+
+        <!-- Right Inspector -->
+        <aside class="col-scroll">
+          <div class="panel">
+            <div class="section-head">
+              <span class="section-title">3 · Muxing &amp; Automation</span>
+            </div>
+
+            <div class="panel-inner" style="display:flex;flex-direction:column;gap:10px;">
+              <div class="field-group" style="margin:0;">
+                <label class="field-label" for="opt-profile">Automation Profile</label>
+                <div style="display:flex;gap:6px;">
+                  <select id="opt-profile" style="flex:1;"></select>
+                  <button id="btn-save-profile" class="btn" style="min-height:34px;padding:0 10px;" data-tip="Save current settings as a reusable profile">Save</button>
+                </div>
+              </div>
+
+              <div class="field-group" style="margin:0;">
+                <label class="field-label" for="opt-mode">Muxing Engine</label>
+                <select id="opt-mode">
+                  <option value="auto">Auto · Smart Container + Fallbacks (Recommended)</option>
+                  <option value="mkvmerge">MKVToolNix (mkvmerge) · Lossless Matroska</option>
+                  <option value="ffmpeg">FFmpeg · Stream Copy / MP4 mov_text</option>
+                  <option value="soft-mkv">Convert to Lossless MKV (.mkv)</option>
+                  <option value="hardsub">Hardsub · Burn-in Video (GPU / x264)</option>
+                </select>
+              </div>
+
+              <!-- Smooth Accordion: GPU Hardsub & Live Style Studio -->
+              <div id="hardsub-drawer" class="accordion collapsed">
+                <div class="accordion-inner" style="padding-top:4px;border-top:1px solid var(--border-hairline);">
+                  <div class="section-title" style="padding-top:4px;">Hardsub GPU &amp; Live Style</div>
+                  <div class="style-preview-stage">
+                    <div id="hs-preview-text" class="style-preview-text">Sample subtitle · نموذج ترجمة</div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div class="field-group" style="margin:0;">
+                      <label class="field-label" for="hs-encoder">Video Encoder</label>
+                      <select id="hs-encoder">
+                        <option value="auto">Auto GPU (NVENC/QSV/AMF → x264)</option>
+                      </select>
+                    </div>
+                    <div class="field-group" style="margin:0;">
+                      <label class="field-label" for="hs-font">Font Family</label>
+                      <select id="hs-font">
+                        <option value="Arial">Arial</option>
+                        <option value="Segoe UI">Segoe UI</option>
+                        <option value="Tahoma">Tahoma (Clean Arabic)</option>
+                        <option value="Verdana">Verdana</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;">
+                    <div class="field-group" style="margin:0;">
+                      <label class="field-label" for="hs-size">Size</label>
+                      <input id="hs-size" type="number" min="14" max="48" value="24" class="tabular" />
+                    </div>
+                    <div class="field-group" style="margin:0;">
+                      <label class="field-label" for="hs-outline">Outline</label>
+                      <input id="hs-outline" type="number" min="0" max="6" value="2" class="tabular" />
+                    </div>
+                    <div class="field-group" style="margin:0;">
+                      <label class="field-label" for="hs-margin">Margin V</label>
+                      <input id="hs-margin" type="number" min="8" max="90" value="28" class="tabular" />
+                    </div>
+                    <div class="field-group" style="margin:0;">
+                      <label class="field-label" for="hs-color">Color</label>
+                      <input id="hs-color" type="color" value="#ffffff" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field-group" style="margin:0;">
+                <label class="field-label" for="opt-existing">Existing Subtitle Tracks</label>
+                <select id="opt-existing">
+                  <option value="keep">Keep all existing tracks</option>
+                  <option value="replace-same-lang">Replace existing tracks matching added language</option>
+                  <option value="replace-all">Strip all existing subtitle tracks</option>
+                </select>
+              </div>
+
+              <div class="field-group" style="margin:0;">
+                <label class="field-label" for="opt-naming">Output Naming Rule</label>
+                <select id="opt-naming">
+                  <option value="default">Standard · &lt;video&gt; [subtitled].ext</option>
+                  <option value="plex">Plex / Jellyfin · &lt;video&gt; (lang).ext</option>
+                  <option value="clean">Clean Folder · subtitled/&lt;video&gt;.ext</option>
+                </select>
+              </div>
+
+              <div class="field-group" style="margin:0;">
+                <label class="field-label" for="opt-output">Custom Output Path (Optional)</label>
+                <div style="display:flex;gap:6px;">
+                  <input id="opt-output" type="text" placeholder="Auto: &lt;video&gt; [subtitled].ext" style="flex:1;" />
+                  <button id="btn-pick-output" class="btn" style="min-height:34px;">Save As</button>
+                </div>
+              </div>
+
+              <label class="check-row">
+                <input id="opt-auto-sync" type="checkbox" />
+                <div>
+                  <div class="check-title">Auto-sync timing before embed</div>
+                  <div class="check-desc">Checks embedded track or audio speech VAD and corrects shifts ≥ 250ms.</div>
+                </div>
+              </label>
+
+              <label class="check-row">
+                <input id="opt-express-drop" type="checkbox" />
+                <div>
+                  <div class="check-title">Express Drop-to-Go</div>
+                  <div class="check-desc">Automatically starts embedding as soon as video + subtitles are loaded.</div>
+                </div>
+              </label>
+
+              <label class="check-row">
+                <input id="opt-mkv-fallback" type="checkbox" checked />
+                <div>
+                  <div class="check-title">Auto-fallback to MKV container</div>
+                  <div class="check-desc">If MP4/AVI rejects a subtitle track, remux losslessly to .mkv instead of failing.</div>
+                </div>
+              </label>
+
+              <label class="check-row">
+                <input id="opt-replace" type="checkbox" />
+                <div>
+                  <div class="check-title">Replace original video in-place</div>
+                  <div class="check-desc">Atomically swaps original file with an instant Undo backup kept safe.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Primary Action & Progress -->
+          <div class="panel">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button id="btn-embed" class="btn btn-primary" style="flex:1;" disabled>
+                Embed Subtitles <kbd style="background:rgba(0,0,0,0.28);color:#fff;border-color:rgba(255,255,255,0.18);">Ctrl+Enter</kbd>
+              </button>
+              <button id="btn-cancel" class="btn btn-danger hidden" style="min-height:40px;">Stop</button>
+            </div>
+
+            <div id="progress-box" class="progress-box hidden" style="margin-top:10px;">
+              <div class="progress-head">
+                <strong id="prog-phase">Preparing...</strong>
+                <span id="prog-detail" class="tabular mono" style="color:var(--text-secondary);">0%</span>
+              </div>
+              <div class="progress-track">
+                <div id="prog-fill" class="progress-fill"></div>
+              </div>
+            </div>
+
+            <div id="result-box" class="hidden" style="margin-top:10px;"></div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- Tab 2: Batch Folder -->
+      <main id="view-batch" class="workspace single-col is-hidden-right">
+        <section class="col-scroll">
+          <div class="panel">
+            <div class="section-head">
+              <span class="section-title">Batch Folder &amp; Library Audit</span>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer;">
+                  <input id="batch-recursive" type="checkbox" style="accent-color:var(--accent);" />
+                  Scan subfolders
+                </label>
+                <select id="audit-lang" style="min-height:30px;padding:4px 8px;width:auto;font-size:12px;" data-tip="Target language for Library Audit">
+                  <option value="ara">Audit: Arabic (ara)</option>
+                  <option value="eng">Audit: English (eng)</option>
+                  <option value="auto">Audit: Any Subtitle</option>
+                </select>
+                <button id="btn-audit-batch" class="btn" style="min-height:30px;" disabled>Audit Library</button>
+                <button id="btn-pick-folder" class="btn" style="min-height:30px;">Choose Folder</button>
+              </div>
+            </div>
+            <div id="batch-dropzone" class="dropzone compact">
+              <div class="dz-meta">
+                <div class="dz-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                  </svg>
+                </div>
+                <div>
+                  <div id="batch-folder-label" class="dz-title">Drop a folder containing movies/episodes &amp; .srt/.zip files</div>
+                  <div id="batch-folder-sub" class="dz-sub">Pairs files automatically by episode tag (S01E01), stem, and release tokens</div>
+                </div>
+              </div>
+              <button id="btn-run-batch" class="btn btn-primary" disabled>Run Batch</button>
+            </div>
+          </div>
+
+          <div id="batch-list" class="track-list"></div>
+        </section>
+      </main>
+
+      <!-- Tab 3: Watch Folder Daemon -->
+      <main id="view-watch" class="workspace single-col is-hidden-right">
+        <section class="col-scroll">
+          <div class="panel">
+            <div class="section-head">
+              <span class="section-title">Auto-Mux Watch Daemon</span>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer;">
+                  <input id="watch-recursive" type="checkbox" style="accent-color:var(--accent);" />
+                  Watch subfolders
+                </label>
+                <button id="btn-watch-tray" class="btn hidden" style="min-height:30px;" data-tip="Hide window and keep watching in Windows System Tray">Minimize to Tray</button>
+                <button id="btn-watch-folder" class="btn" style="min-height:30px;">Select Folder</button>
+              </div>
+            </div>
+            <div class="panel-inner" style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;">
+                <div style="min-width:0;">
+                  <div id="watch-folder-label" class="dz-title">No watch folder selected</div>
+                  <div class="dz-sub">Persists history across restarts, auto-pairs new downloads, cleans &amp; embeds hands-free.</div>
+                </div>
+                <button id="btn-watch-toggle" class="btn btn-primary" disabled>Start Watching</button>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:10px;border-top:1px solid var(--border-hairline);font-size:12px;color:var(--text-secondary);">
+                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                  <input id="watch-autosync" type="checkbox" style="accent-color:var(--accent);" />
+                  Auto-sync timing
+                </label>
+                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                  <input id="watch-clean" type="checkbox" checked style="accent-color:var(--accent);" />
+                  Clean SDH &amp; ads
+                </label>
+                <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                  <input id="watch-notify" type="checkbox" checked style="accent-color:var(--accent);" />
+                  Desktop notifications
+                </label>
+                <label id="watch-startup-wrap" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                  <input id="watch-startup" type="checkbox" style="accent-color:var(--accent);" />
+                  Start on OS sign-in
+                </label>
+                <div style="display:inline-flex;align-items:center;gap:6px;margin-left:auto;">
+                  <span>Used subs:</span>
+                  <select id="watch-cleanup" style="min-height:28px;padding:3px 8px;width:auto;font-size:12px;">
+                    <option value="archive">Move to _archived_subs/</option>
+                    <option value="trash">Send to Recycle Bin</option>
+                    <option value="keep">Keep in folder</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="flex:1;display:flex;flex-direction:column;">
+            <div class="section-head">
+              <span class="section-title">Live Activity Feed</span>
+              <button id="btn-watch-clear" class="btn btn-ghost" style="min-height:26px;padding:0 8px;font-size:11.5px;">Clear Log</button>
+            </div>
+            <div id="watch-log" class="watch-log">
+              <div class="panel-inner" style="color:var(--text-muted);">Select a folder and click Start Watching to monitor incoming media.</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Full-window Drag Overlay -->
+  <div id="drag-overlay" class="drag-overlay">
+    <div style="text-align:center;">
+      <div style="font-size:18px;font-weight:650;color:var(--accent);">Drop Video, Subtitle (.srt/.vtt/.ass/.zip), or Folder</div>
+      <div style="color:var(--text-secondary);margin-top:4px;">Files are automatically sorted, repaired, and verified</div>
+    </div>
+  </div>
+
+  <!-- Command Palette (Ctrl+K) -->
+  <div id="cmd-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Command Menu">
+    <div class="modal-card">
+      <input id="cmd-input" class="cmd-input" type="text" placeholder="Type a command or action..." autocomplete="off" />
+      <div id="cmd-list" class="cmd-list"></div>
+    </div>
+  </div>
+
+  <!-- Sync Check Modal -->
+  <div id="sync-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Subtitle Sync Report">
+    <div class="modal-card" style="width:min(640px, 94vw);padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 class="fc-balance" style="font-size:15px;">Subtitle Sync Check</h3>
+        <button id="btn-close-sync" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div id="sync-body"></div>
+    </div>
+  </div>
+
+  <!-- Cue Preview Modal -->
+  <div id="preview-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Subtitle Cue Preview">
+    <div class="modal-card" style="width:min(620px, 94vw);padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;">
+        <h3 id="preview-title" class="fc-balance" style="font-size:15px;">Cue Preview</h3>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="preview-count" class="badge tabular">0 cues</span>
+          <button id="btn-close-preview" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <input id="preview-search" type="text" placeholder="Search subtitle dialogue or timestamp..." style="margin-bottom:10px;" autocomplete="off" />
+      <div id="preview-body" style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- Profile Manager Modal -->
+  <div id="profile-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Automation Profiles">
+    <div class="modal-card" style="width:min(540px, 94vw);padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 class="fc-balance" style="font-size:15px;">Save &amp; Manage Profiles</h3>
+        <button id="btn-close-profile" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="panel-inner" style="display:flex;gap:8px;margin-bottom:10px;">
+        <input id="profile-name-input" type="text" placeholder="Profile name (e.g. Arabic Night Mode)" style="flex:1;" autocomplete="off" />
+        <button id="btn-profile-confirm-save" class="btn btn-primary" style="min-height:34px;padding:0 14px;">Save Current</button>
+      </div>
+      <div id="profile-manage-list" style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- Undo Backup Manager Modal -->
+  <div id="undo-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Undo Backups">
+    <div class="modal-card" style="width:min(620px, 94vw);padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <h3 class="fc-balance" style="font-size:15px;">Backup &amp; Undo History</h3>
+          <span id="undo-total-size" class="badge tabular">0 B</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button id="btn-purge-undos" class="btn btn-danger" style="min-height:30px;padding:0 10px;font-size:12px;">Purge All Backups</button>
+          <button id="btn-close-undo" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <div id="undo-body" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- Settings & Environment Doctor Modal -->
+  <div id="settings-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Settings and Environment">
+    <div class="modal-card" style="width:min(650px, 94vw);padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 class="fc-balance" style="font-size:15px;">Studio Settings &amp; Environment Doctor</h3>
+        <button id="btn-close-settings" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div id="settings-body" style="display:flex;flex-direction:column;gap:12px;max-height:480px;overflow-y:auto;">
+        <div class="panel-inner" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="section-title">Appearance, Language &amp; OS Integration</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <div>
+              <div class="check-title">Interface Language</div>
+              <div class="check-desc">Switches UI labels and RTL layout instantly</div>
+            </div>
+            <select id="opt-ui-lang" style="width:auto;min-height:32px;padding:4px 10px;">
+              <option value="en">English</option>
+              <option value="ar">العربية (RTL)</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+            </select>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--border-hairline);">
+            <div>
+              <div class="check-title">Theme</div>
+              <div class="check-desc">Instant zero-lag switch between Obsidian Dark and Daylight Studio</div>
+            </div>
+            <button id="btn-settings-theme" class="btn" style="min-height:32px;">Toggle Theme</button>
+          </div>
+          <div id="shell-row" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--border-hairline);">
+            <div>
+              <div class="check-title">OS File Manager Context Menu</div>
+              <div class="check-desc">Adds "Embed Subtitles" + headless "Quick-Embed" (Windows Explorer / macOS Finder / Linux Nautilus)</div>
+            </div>
+            <button id="btn-shell-toggle" class="btn" style="min-height:32px;">Enable</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--border-hairline);">
+            <div>
+              <div class="check-title">Auto-Discover Companion Subtitles</div>
+              <div class="check-desc">Automatically loads matching .srt/.ass/.ttml/.sub/.zip from folder &amp; Subs/ when a video opens</div>
+            </div>
+            <input id="opt-autodiscover" type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;" />
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--border-hairline);">
+            <div>
+              <div class="check-title">Prefer Default Subtitle (Foreign Audio Rule)</div>
+              <div class="check-desc">Auto-marks this language as Default when primary audio is another language</div>
+            </div>
+            <select id="opt-prefer-sub" style="width:auto;min-height:32px;padding:4px 10px;">
+              <option value="">Off (Use track order)</option>
+              <option value="ara">Arabic (ara)</option>
+              <option value="eng">English (eng)</option>
+              <option value="spa">Spanish (spa)</option>
+              <option value="fre">French (fre)</option>
+            </select>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--border-hairline);">
+            <div>
+              <div class="check-title">Release Updates</div>
+              <div id="update-status-desc" class="check-desc">Opt-in check against GitHub Releases</div>
+            </div>
+            <button id="btn-check-updates" class="btn" style="min-height:32px;">Check Updates</button>
+          </div>
+        </div>
+
+        <div class="panel-inner" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="section-title">Hardsub (Burn-in) Defaults</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" for="opt-crf">Quality (CRF · lower = sharper)</label>
+              <select id="opt-crf">
+                <option value="16">CRF 16 · Near Lossless</option>
+                <option value="18" selected>CRF 18 · Studio High (Default)</option>
+                <option value="21">CRF 21 · Balanced</option>
+                <option value="24">CRF 24 · Compact</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" for="opt-preset">CPU x264 Preset</label>
+              <select id="opt-preset">
+                <option value="veryfast">Very Fast</option>
+                <option value="medium" selected>Medium (Default)</option>
+                <option value="slow">Slow (Best Compression)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-inner" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="section-title">Muxing Engines &amp; 1-Click Installer</div>
+          <div id="bootstrap-progress" class="progress-box hidden">
+            <div class="progress-head">
+              <strong id="boot-status">Downloading...</strong>
+              <span id="boot-pct" class="tabular mono">0%</span>
+            </div>
+            <div class="progress-track">
+              <div id="boot-fill" class="progress-fill"></div>
+            </div>
+          </div>
+          <div id="doctor-list" style="display:flex;flex-direction:column;gap:7px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feelcraft Skip-Delay Tooltip -->
+  <div id="fc-tooltip" class="fc-tooltip" role="tooltip"></div>
+
+  <!-- Undo / Feedback Toast Rack -->
+  <div id="toast-rack" class="toast-rack" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
